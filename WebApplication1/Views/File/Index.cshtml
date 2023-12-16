@@ -1,0 +1,148 @@
+﻿<!-- Views/File/Index.cshtml -->
+@model IEnumerable<WebApplication1.Models.FileModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mato File Explorer</title>
+    <!-- Include any necessary CSS or JavaScript files here -->
+</head>
+<body>
+    <h1>Mato File Explorer</h1>
+
+    <div>
+        <button onclick="createFolder()">Create Folder</button>
+        <button onclick="createFile()">Create File</button>
+    </div>
+
+    <input type="text" id="searchBox" placeholder="Search" />
+    <button onclick="searchFiles()">Search</button>
+
+    <ul>
+        @foreach (var file in Model)
+        {
+            <li>@file.Name</li>
+        }
+    </ul>
+
+    <script>
+        function createFolder() {
+            var folderName = prompt('Enter folder name:');
+            if (folderName) {
+                // Call your API to create a folder
+                // Example using Fetch API (replace with your actual API endpoint):
+                fetch('/Folder/Create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ Name: folderName })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Folder created successfully.');
+                            return response.json(); // Return the created folder from the response
+                        } else {
+                            alert('Failed to create folder.');
+                            throw new Error('Failed to create folder.');
+                        }
+                    })
+                    .then(newFolder => {
+                        // Append the new folder to the list
+                        var ul = document.querySelector('ul');
+                        var li = document.createElement('li');
+                        li.textContent = newFolder.name;
+
+                        // Add double-click event to open the folder
+                        li.addEventListener('dblclick', function () {
+                            openFolder(newFolder.name);
+                        });
+
+                        ul.appendChild(li);
+                    })
+                    .catch(error => {
+                        console.error('Error creating folder:', error);
+                        alert('An error occurred while creating the folder.');
+                    });
+            }
+        }
+
+        function openFolder(folderName) {
+            // Call your API to load folder content dynamically
+            fetch(`/Folder/GetFolderContents?folderName=${encodeURIComponent(folderName)}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to load folder content.');
+                    }
+                })
+                .then(folderContent => {
+                    // Example: Update the UI with the folder content
+                    renderFolderContent(folderContent);
+                })
+                .catch(error => {
+                    console.error('Error loading folder content:', error);
+                    alert('An error occurred while loading the folder content.');
+                });
+        }
+
+        function renderFolderContent(folderContent) {
+            // Example: Update the UI with the folder content
+            alert('Rendering folder content. Implement your UI update logic here.');
+            // You can update the UI by populating a list, creating elements, etc.
+        }
+
+
+        function createFile() {
+            var fileName = prompt('Enter file name:');
+            if (fileName) {
+                // Call your API to create a file
+                // Example using Fetch API (replace with your actual API endpoint):
+                fetch('/File/Create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ Name: fileName })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('File created successfully.');
+                            location.reload(); // Refresh the page after creating the file
+                        } else {
+                            alert('Failed to create file.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating file:', error);
+                        alert('An error occurred while creating the file.');
+                    });
+            }
+        }
+
+        function searchFiles() {
+            var searchTerm = document.getElementById('searchBox').value;
+
+            // Call your API to search for files
+            // Example using Fetch API (replace with your actual API endpoint):
+            fetch(`/api/File?searchTerm=${searchTerm}`)
+                .then(response => response.json())
+                .then(files => {
+                    // Update the UI with the search results
+                    var ul = document.querySelector('ul');
+                    ul.innerHTML = '';
+                    files.forEach(file => {
+                        var li = document.createElement('li');
+                        li.textContent = file.name;
+                        ul.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error searching files:', error);
+                    alert('An error occurred while searching for files.');
+                });
+        }
+    </script>
+</body>
+</html>

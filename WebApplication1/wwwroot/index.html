@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>File Explorer</h3>
+                <button class="btn btn-primary mb-2" onclick="getAllFiles()">Get All Files</button>
+                <button class="btn btn-success mb-2" onclick="createFile()">Create File</button>
+
+                <div class="input-group mb-3">
+                    <input type="text" id="searchBox" class="form-control" placeholder="Enter search term">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onclick="searchFiles()">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-group" id="fileList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createFolder() {
+            var folderName = prompt('Enter folder name:');
+            if (folderName) {
+                // Call the API to create a folder
+                fetch('/api/Folder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ Name: folderName }),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Folder created successfully!');
+                            location.reload(); // Refresh the page to update the file list
+                        } else {
+                            alert('Error creating folder: ' + response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating folder:', error);
+                        alert('Error creating folder. Check the console for details.');
+                    });
+            }
+        }
+
+        function createFile() {
+            var fileName = prompt('Enter file name:');
+            if (fileName) {
+                // Call the API to create a file
+                fetch('/api/File', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ Name: fileName }),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('File created successfully!');
+                            location.reload(); // Refresh the page to update the file list
+                        } else {
+                            alert('Error creating file: ' + response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating file:', error);
+                        alert('Error creating file. Check the console for details.');
+                    });
+            }
+        }
+
+        function searchFiles() {
+            var searchTerm = document.getElementById('searchBox').value;
+            // Call the API to search for files
+            fetch(`/api/File?searchTerm=${searchTerm}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Render the search results on the page
+                    var fileList = document.querySelector('ul');
+                    fileList.innerHTML = '';
+                    data.forEach(file => {
+                        fileList.innerHTML += `<li>${file.Name}</li>`;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error searching files:', error);
+                    alert('Error searching files. Check the console for details.');
+                });
+        }
+
+        // Implement additional JavaScript logic as needed
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
