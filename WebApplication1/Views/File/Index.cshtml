@@ -1,14 +1,85 @@
 ﻿<!-- Views/File/Index.cshtml -->
+@using WebApplication1.Models
 @model IEnumerable<WebApplication1.Models.FileModel>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Mato File Explorer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer</title>
     <!-- Include any necessary CSS or JavaScript files here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
+
+        div {
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 8px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+            li:hover {
+                background-color: #e6e6e6;
+            }
+
+        .icon {
+            margin-right: 10px;
+            color: #007bff; /* Blue color for folder icon */
+        }
+
+        .file-icon {
+            color: #4caf50; /* Green color for file icon */
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        #searchBox {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        #searchButton {
+            padding: 8px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Mato File Explorer</h1>
+    <h1>File Explorer</h1>
 
     <div>
         <button onclick="createFolder()">Create Folder</button>
@@ -16,13 +87,15 @@
         <button onclick="goBack()">Back</button>
     </div>
 
-    <input type="text" id="searchBox" placeholder="Search" />
-    <button onclick="searchFiles()">Search</button>
+    <div class="search-container">
+        <input type="text" id="searchBox" placeholder="Search" />
+        <button id="searchButton" onclick="searchFiles()">Search</button>
+    </div>
 
     <ul>
         @foreach (var file in Model)
         {
-            <li>@file.Name</li>
+            <li><span class="icon @((file is FileModel) ? "fas fa-file file-icon" : "fas fa-folder")"></span>@file.Name</li>
         }
     </ul>
 
@@ -175,3 +248,7 @@
     </script>
 </body>
 </html>
+
+
+
+
