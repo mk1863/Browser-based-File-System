@@ -13,6 +13,7 @@
     <div>
         <button onclick="createFolder()">Create Folder</button>
         <button onclick="createFile()">Create File</button>
+        <button onclick="goBack()">Back</button>
     </div>
 
     <input type="text" id="searchBox" placeholder="Search" />
@@ -66,33 +67,33 @@
                     });
             }
         }
-
         function openFolder(folderName) {
-            // Call your API to load folder content dynamically
-            fetch(`/Folder/GetFolderContents?folderName=${encodeURIComponent(folderName)}`)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Failed to load folder content.');
-                    }
-                })
-                .then(folderContent => {
-                    // Example: Update the UI with the folder content
-                    renderFolderContent(folderContent);
+            // Call your API to get the contents of the folder
+            // Example using Fetch API (replace with your actual API endpoint):
+            fetch(`/api/Folder/Open?folderName=${encodeURIComponent(folderName)}`)
+                .then(response => response.json())
+                .then(folderContents => {
+                    // Update the UI with the contents of the folder
+                    var ul = document.querySelector('ul');
+                    ul.innerHTML = '';
+                    folderContents.forEach(item => {
+                        var li = document.createElement('li');
+                        li.textContent = item.name;
+                        // Add the double-click event listener for folders
+                        if (item.type === 'Folder') {
+                            li.addEventListener('dblclick', function () {
+                                openFolder(item.name);
+                            });
+                        }
+
+                        ul.appendChild(li);
+                    });
                 })
                 .catch(error => {
-                    console.error('Error loading folder content:', error);
-                    alert('An error occurred while loading the folder content.');
+                    console.error('Error opening folder:', error);
+                    alert('An error occurred while opening the folder.');
                 });
         }
-
-        function renderFolderContent(folderContent) {
-            // Example: Update the UI with the folder content
-            alert('Rendering folder content. Implement your UI update logic here.');
-            // You can update the UI by populating a list, creating elements, etc.
-        }
-
 
         function createFile() {
             var fileName = prompt('Enter file name:');
@@ -141,6 +142,34 @@
                 .catch(error => {
                     console.error('Error searching files:', error);
                     alert('An error occurred while searching for files.');
+                });
+        }
+
+        function goBack() {
+            // Call your API to get the contents of the previous folder
+            // Example using Fetch API (replace with your actual API endpoint):
+            fetch('/api/Folder/GoBack')
+                .then(response => response.json())
+                .then(folderContents => {
+                    // Update the UI with the contents of the previous folder
+                    var ul = document.querySelector('ul');
+                    ul.innerHTML = '';
+                    folderContents.forEach(item => {
+                        var li = document.createElement('li');
+                        li.textContent = item.name;
+
+                        if (item.type === 'Folder') {
+                            li.addEventListener('dblclick', function () {
+                                openFolder(item.name);
+                            });
+                        }
+
+                        ul.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error going back:', error);
+                    alert('An error occurred while going back.');
                 });
         }
     </script>

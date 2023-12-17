@@ -11,4 +11,6 @@ public interface IFolderService
     void DeleteFolder(int folderId);
 
     IEnumerable<FolderModel> GetFolderContents(string folderName);
+
+    IEnumerable<FolderModel> GoBack();
 }

@@ -55,19 +55,27 @@ namespace WebApplication1.Controllers
             return NoContent();
         }
 
-        [HttpGet("{folderName}")]
-        public IActionResult GetFolderContents(string folderName)
+        [HttpGet("/api/Folder/Open")]
+        public IActionResult OpenFolder(string folderName)
+        {
+            var folderContents = folderService.GetFolderContents(folderName);
+            return Json(folderContents);
+        }
+
+        [HttpGet("/api/Folder/GoBack")]
+        public IActionResult GoBack()
         {
             try
             {
-                var folderContents = folderService.GetFolderContents(folderName);
-                return Ok(folderContents);
+                var folderContents = folderService.GoBack();
+                return Json(folderContents);
             }
             catch (Exception ex)
             {
-                // Log the error
-                return BadRequest(new { message = $"Failed to get folder contents: {ex.Message}" });
-            }
+                // Handle exceptions if necessary
+                Console.WriteLine($"Error going back to the previous folder: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            };
         }
     }
 

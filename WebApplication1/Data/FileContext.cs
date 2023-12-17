@@ -49,6 +49,7 @@ namespace WebApplication1.Data
             builder.Property(f => f.Name).IsRequired();
             builder.Property(f => f.Type).IsRequired(false);
             builder.Property(f => f.LastWriteTime).IsRequired();
+            builder.Property(f => f.ParentFolderName).IsRequired(false);
         }
     }
 }
