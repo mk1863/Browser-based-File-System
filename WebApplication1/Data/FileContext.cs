@@ -22,9 +22,6 @@ namespace WebApplication1.Data
 
             // Configure the Folder entity
             modelBuilder.Entity<FolderModel>(ConfigureFolderModel);
-
-            ////// Seed initial data (if needed)
-            ////SeedData.Initialize(this);
         }
 
         private static void ConfigureFileModel(EntityTypeBuilder<FileModel> builder)

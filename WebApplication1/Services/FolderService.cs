@@ -75,7 +75,7 @@ namespace WebApplication1.Services
             try
             {
                 var folderContents = context.Folders
-                    .Where(f => f.ParentFolderName == folderPath) // Assuming ParentFolderName is the property that holds the parent folder's name
+                    .Where(f => f.ParentFolderName == folderPath)
                     .ToList();
 
                 return folderContents;
@@ -90,20 +90,13 @@ namespace WebApplication1.Services
 
         public IEnumerable<FolderModel> GoBack()
         {
-            // Ensure the navigation history stack is not empty
             if (navigationHistory.Count > 1)
             {
-                // Pop the current folder from the navigation history
                 navigationHistory.Pop();
-
-                // Get the path of the previous folder
                 string previousFolder = navigationHistory.Peek();
-
-                // Get the contents of the previous folder
                 return GetFolderContents(previousFolder);
             }
 
-            // If there's only the root directory in the stack, return its contents
             return GetFolderContents("root");
         }
     }

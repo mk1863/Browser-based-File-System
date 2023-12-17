@@ -103,8 +103,6 @@
         function createFolder() {
             var folderName = prompt('Enter folder name:');
             if (folderName) {
-                // Call your API to create a folder
-                // Example using Fetch API (replace with your actual API endpoint):
                 fetch('/Folder/Create', {
                     method: 'POST',
                     headers: {
@@ -141,8 +139,6 @@
             }
         }
         function openFolder(folderName) {
-            // Call your API to get the contents of the folder
-            // Example using Fetch API (replace with your actual API endpoint):
             fetch(`/api/Folder/Open?folderName=${encodeURIComponent(folderName)}`)
                 .then(response => response.json())
                 .then(folderContents => {
@@ -171,8 +167,6 @@
         function createFile() {
             var fileName = prompt('Enter file name:');
             if (fileName) {
-                // Call your API to create a file
-                // Example using Fetch API (replace with your actual API endpoint):
                 fetch('/File/Create', {
                     method: 'POST',
                     headers: {
@@ -197,9 +191,6 @@
 
         function searchFiles() {
             var searchTerm = document.getElementById('searchBox').value;
-
-            // Call your API to search for files
-            // Example using Fetch API (replace with your actual API endpoint):
             fetch(`/api/File?searchTerm=${searchTerm}`)
                 .then(response => response.json())
                 .then(files => {
@@ -219,8 +210,6 @@
         }
 
         function goBack() {
-            // Call your API to get the contents of the previous folder
-            // Example using Fetch API (replace with your actual API endpoint):
             fetch('/api/Folder/GoBack')
                 .then(response => response.json())
                 .then(folderContents => {
